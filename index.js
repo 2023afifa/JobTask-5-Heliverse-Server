@@ -30,9 +30,26 @@ async function run() {
 
         app.get("/users", async (req, res) => {
             const result = await userCollection.find().toArray();
-            console.log(result);
             res.send(result);
         })
+
+
+        // Pagination Feature
+        app.get("/usersCount", async (req, res) => {
+            const count = await userCollection.estimatedDocumentCount();
+            res.send({ count });
+        })
+
+
+        app.get('/usersPage', async (req, res) => {
+            const page = parseInt(req.query.page);
+            const size = parseInt(req.query.size);
+            const result = await userCollection.find().skip(page * size).limit(size).toArray();
+            console.log("result ", result);
+            res.send(result);
+        })
+
+
 
 
         // await client.db("admin").command({ ping: 1 });
